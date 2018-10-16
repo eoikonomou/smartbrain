@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+
+  # PostgreSQL
+  postgres:
+    build: ../smartbraindb/
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: smart-brain-docker
+      POSTGRES_HOST: postgres
+    image: postgres
+    ports:
+      - "5432:5432"
+
+  # Backend API
+  smartbrainapi:
+    container_name: backend
+    # image: node:8.11.2
+    build: ../smartbrainapi/
+    command: npm start
+    working_dir: /usr/src/smartbrainapi
+    environment:
+      POSTGRES_URI: postgres://test:pass@postgres:5432/smart-brain-docker
+    ports:
+      - "3002:3002"
+    links:
+      - postgres:postgres
+   # volumes:  # add if in dev mode - it is used to avoid rebuilding the container for every change we make to the code
+    #  - ../smartbrainapi:/usr/src/smartbrainapi
+
+  # Web
+  smartbrainweb:
+    container_name: web
+    build: ../smartbrainweb/
+    command: npm start
+    working_dir: /usr/src/smartbrainweb
+    ports:
+      - "3001:3001"
