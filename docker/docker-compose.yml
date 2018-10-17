@@ -4,25 +4,24 @@ services:
 
   # PostgreSQL
   postgres:
-    build: ../smartbraindb/
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: smart-brain-docker
       POSTGRES_HOST: postgres
-    image: postgres
+    build: ../smartbraindb/
     ports:
       - "5432:5432"
 
   # Backend API
   smartbrainapi:
     container_name: backend
-    # image: node:8.11.2
     build: ../smartbrainapi/
     command: npm start
     working_dir: /usr/src/smartbrainapi
     environment:
       POSTGRES_URI: postgres://test:pass@postgres:5432/smart-brain-docker
+      CLARIFAI_API_KEY: CLARIFAI_API_KEY
     ports:
       - "3002:3002"
     links:
