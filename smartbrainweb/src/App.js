@@ -7,6 +7,10 @@ import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import Modal from './components/Modal/Modal';
+import Profile from './components/Profile/Profile';
+
+// Style
 import './App.css';
 
 const particlesOptions = {
@@ -27,10 +31,13 @@ const initialState = {
   boxArray: [],
   route: 'signin',
   isSignedIn: false,
+  isProfileOpen: false,
   user: {
     id: '',
     name: '',
     email: '',
+    age: '',
+    pet: '',
     entries: 0,
     joined: ''
   }
@@ -48,6 +55,8 @@ class App extends Component {
         id: data.id,
         name: data.name,
         email: data.email,
+        age: data.age,
+        pet: data.pet,
         entries: data.entries,
         joined: data.joined
       }
@@ -110,21 +119,33 @@ class App extends Component {
 
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState(initialState);
+      return this.setState(initialState);
     } else if (route === 'home') {
       this.setState({ isSignedIn: true });
     }
     this.setState({ route: route });
   }
 
+  toggleModal = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      isProfileOpen: !prevState.isProfileOpen
+    }));
+  }
+
   render() {
-    const { isSignedIn, imageUrl, route, boxArray } = this.state;
+    const { isSignedIn, imageUrl, route, boxArray, isProfileOpen, user } = this.state;
     return (
       <div className="App">
         <Particles className='particles'
           params={particlesOptions}
         />
-        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} />
+        <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} toggleModal={this.toggleModal} />
+        {isProfileOpen && (
+          <Modal>
+            <Profile user={user} loadUser={this.loadUser} toggleModal={this.toggleModal} />
+          </Modal>
+        )}
         {route === 'home'
           ? <div>
             <Logo />
