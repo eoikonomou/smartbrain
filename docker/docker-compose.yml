@@ -4,6 +4,7 @@ services:
 
   # PostgreSQL
   postgres:
+    container_name: postgresDB
     environment:
       POSTGRES_USER: test
       POSTGRES_PASSWORD: pass
@@ -21,19 +22,30 @@ services:
     working_dir: /usr/src/smartbrainapi
     environment:
       POSTGRES_URI: postgres://test:pass@postgres:5432/smart-brain-docker
+      JWT_SECRET: JWT_SECRET
       CLARIFAI_API_KEY: CLARIFAI_API_KEY
     ports:
       - "3002:3002"
-    links:
-      - postgres:postgres
    # volumes:  # add if in dev mode - it is used to avoid rebuilding the container for every change we make to the code
     #  - ../smartbrainapi:/usr/src/smartbrainapi
 
+  # Redis DB
+  # redis:
+  #   container_name: redisDB
+  #   environment:
+  #     REDIS_USER: redisTest
+  #     REDIS_PASSWORD: pass
+  #     REDIS_DB: smart-brain-redis
+  #     REDIS_HOST: redis
+  #   build: ../smartbrainredis/
+  #   ports:
+  #     - "6379:6379"
+
   # Web
-  smartbrainweb:
-    container_name: web
-    build: ../smartbrainweb/
-    command: npm start
-    working_dir: /usr/src/smartbrainweb
-    ports:
-      - "3001:3001"
+  # smartbrainweb:
+  #   container_name: web
+  #   build: ../smartbrainweb/
+  #   command: npm start
+  #   working_dir: /usr/src/smartbrainweb
+  #   ports:
+  #     - "3001:3001"
