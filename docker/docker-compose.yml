@@ -23,6 +23,7 @@ services:
     environment:
       POSTGRES_URI: postgres://test:pass@postgres:5432/smart-brain-docker
       JWT_SECRET: JWT_SECRET
+      REDIS_URI: redis://redis:6379
       CLARIFAI_API_KEY: CLARIFAI_API_KEY
     ports:
       - "3002:3002"
@@ -30,16 +31,11 @@ services:
     #  - ../smartbrainapi:/usr/src/smartbrainapi
 
   # Redis DB
-  # redis:
-  #   container_name: redisDB
-  #   environment:
-  #     REDIS_USER: redisTest
-  #     REDIS_PASSWORD: pass
-  #     REDIS_DB: smart-brain-redis
-  #     REDIS_HOST: redis
-  #   build: ../smartbrainredis/
-  #   ports:
-  #     - "6379:6379"
+  redis:
+    container_name: redisDB
+    image: redis
+    ports:
+      - "6379:6379"
 
   # Web
   # smartbrainweb:

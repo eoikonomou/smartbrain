@@ -49,6 +49,54 @@ class App extends Component {
     this.state = initialState;
   }
 
+  componentDidMount() {
+    const token = window.sessionStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:3002/signin', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.id) {
+            fetch(`http://localhost:3002/profile/${data.id}`, {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+              }
+            })
+              .then(response => response.json())
+              .then(user => {
+                if (user && user.email) {
+                  this.loadUser(user);
+                  this.onRouteChange('home');
+                }
+              })
+              .catch(err => console.log(err));
+          }
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
+  // getUser = (id) => {
+  //   return fetch(`http://localhost:3002/profile/${id}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.userId && data.success) {
+  //         this.props.loadUser(data)
+  //         this.props.onRouteChange('home');
+  //       } else {
+  //         return Promise.reject('An error occurred');
+  //       }
+  //     })
+  //     .catch(err => Promise.reject(err));
+  // }
+
   loadUser = (data) => {
     this.setState({
       user: {
@@ -136,7 +184,7 @@ class App extends Component {
   render() {
     const { isSignedIn, imageUrl, route, boxArray, isProfileOpen, user } = this.state;
     return (
-      <div className="App">
+      <div className="App" >
         <Particles className='particles'
           params={particlesOptions}
         />
@@ -146,26 +194,27 @@ class App extends Component {
             <Profile user={user} loadUser={this.loadUser} toggleModal={this.toggleModal} />
           </Modal>
         )}
-        {route === 'home'
-          ? <div>
-            <Logo />
-            <Rank
-              name={this.state.user.name}
-              entries={this.state.user.entries}
-            />
-            <ImageLinkForm
-              onInputChange={this.onInputChange}
-              onButtonSubmit={this.onButtonSubmit}
-            />
-            <FaceRecognition boxArray={boxArray} imageUrl={imageUrl} />
-          </div>
-          : (
-            route === 'signin'
-              ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-              : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
-          )
+        {
+          route === 'home'
+            ? <div>
+              <Logo />
+              <Rank
+                name={this.state.user.name}
+                entries={this.state.user.entries}
+              />
+              <ImageLinkForm
+                onInputChange={this.onInputChange}
+                onButtonSubmit={this.onButtonSubmit}
+              />
+              <FaceRecognition boxArray={boxArray} imageUrl={imageUrl} />
+            </div>
+            : (
+              route === 'signin'
+                ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+                : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
+            )
         }
-      </div>
+      </div >
     );
   }
 }
