@@ -14,6 +14,13 @@ services:
     ports:
       - "5432:5432"
 
+   # Redis DB
+  redis:
+    container_name: redisDB
+    image: redis
+    ports:
+      - "6379:6379"
+
   # Backend API
   smartbrainapi:
     container_name: backend
@@ -27,15 +34,11 @@ services:
       CLARIFAI_API_KEY: CLARIFAI_API_KEY
     ports:
       - "3002:3002"
+    depends_on:
+      - postgres
+      - redis
    # volumes:  # add if in dev mode - it is used to avoid rebuilding the container for every change we make to the code
     #  - ../smartbrainapi:/usr/src/smartbrainapi
-
-  # Redis DB
-  redis:
-    container_name: redisDB
-    image: redis
-    ports:
-      - "6379:6379"
 
   # Web
   # smartbrainweb:
