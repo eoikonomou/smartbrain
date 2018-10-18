@@ -9,6 +9,7 @@ module.exports.redisClient = redis.createClient(process.env.REDIS_URI);
 
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
+const signout = require('./controllers/signout');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
 const auth = require('./middleware/authorization');
@@ -30,10 +31,11 @@ app.post('/signin', signin.signInAuthentication(db, bcrypt));
 app.post('/register', (req, res) => { register.handleRegister(req, res, db, bcrypt) });
 
 /*c ---------------------------- Protected API -------------------------------------- */
-app.get('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res, db) });
-app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db) });
-app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db) });
-app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res) });
+app.get('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileGet(req, res, db); });
+app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfileUpdate(req, res, db); });
+app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db); });
+app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res); });
+app.post('/signout', auth.requireAuth, (req, res) => { signout.handleSignOut(req, res); });
 /* ----------------------------- API End ------------------------------------------ */
 
 app.listen(3002, () => {

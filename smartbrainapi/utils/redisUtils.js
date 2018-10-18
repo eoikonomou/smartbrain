@@ -3,7 +3,6 @@ const redisClient = require('../server').redisClient;
 const setToken = (token, id) => {
     return new Promise((resolve, reject) => {
         return redisClient.set(token, id, (err, reply) => {
-            console.log({ token, id, err, reply });
             if (err || !reply) {
                 return reject(err || 'A problem occurred generating the token');
             }
@@ -24,7 +23,19 @@ const getAuthTokenId = (req, res) => {
     });
 }
 
+const removeToken = (token) => {
+    return new Promise((resolve, reject) => {
+        return redisClient.del(token, (err, reply) => {
+            if (err || !reply) {
+                return reject(err || 'A problem occurred removing token');
+            }
+            return resolve('OK');
+        });
+    });
+}
+
 module.exports = {
     setToken,
-    getAuthTokenId
+    getAuthTokenId,
+    removeToken
 }

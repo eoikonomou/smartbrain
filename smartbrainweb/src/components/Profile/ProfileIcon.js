@@ -18,7 +18,21 @@ class ProfileIcon extends React.Component {
     }
 
     handleSignOut = () => {
-        this.props.onRouteChange('signout');
+        fetch(`http://${process.env.REACT_APP_API_HOST}:3002/signout`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': window.sessionStorage.getItem('token')
+            }
+        })
+            .then(response => response.json())
+            .then(resp => {
+                if (resp === 'OK') {
+                    window.sessionStorage.removeItem('token');
+                    this.props.onRouteChange('signout');
+                }
+            })
+            .catch(err => console.log(err));
     }
 
     render() {
