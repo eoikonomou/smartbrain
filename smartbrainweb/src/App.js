@@ -83,20 +83,6 @@ class App extends Component {
     }
   }
 
-  // getUser = (id) => {
-  //   return fetch(`http://localhost:3002/profile/${id}`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (data.userId && data.success) {
-  //         this.props.loadUser(data)
-  //         this.props.onRouteChange('home');
-  //       } else {
-  //         return Promise.reject('An error occurred');
-  //       }
-  //     })
-  //     .catch(err => Promise.reject(err));
-  // }
-
   loadUser = (data) => {
     this.setState({
       user: {
@@ -138,7 +124,10 @@ class App extends Component {
     this.setState({ imageUrl: this.state.input });
     fetch('http://localhost:3002/imageurl', {
       method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': window.sessionStorage.getItem('token')
+      },
       body: JSON.stringify({
         input: this.state.input
       })
@@ -148,7 +137,10 @@ class App extends Component {
         if (response) {
           fetch('http://localhost:3002/image', {
             method: 'put',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id
             })
