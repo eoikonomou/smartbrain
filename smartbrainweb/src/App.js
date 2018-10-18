@@ -9,6 +9,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
 import Modal from './components/Modal/Modal';
 import Profile from './components/Profile/Profile';
+import * as apiCalls from './api/apiCalls';
 
 // Style
 import './App.css';
@@ -52,24 +53,10 @@ class App extends Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch(`http://${process.env.REACT_APP_API_HOST}:3002/signin`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token
-        }
-      })
-        .then(response => response.json())
+      apiCalls.signIn({ token })
         .then(data => {
           if (data && data.id) {
-            fetch(`http://${process.env.REACT_APP_API_HOST}:3002/profile/${data.id}`, {
-              method: 'get',
-              headers: {
-                'Content-Type': 'application/json',
-                'Authorization': token
-              }
-            })
-              .then(response => response.json())
+            apiCalls.getProfile({ userId: data.id, token })
               .then(user => {
                 if (user && user.email) {
                   this.loadUser(user);
@@ -122,30 +109,10 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch(`http://${process.env.REACT_APP_API_HOST}:3002/imageurl`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': window.sessionStorage.getItem('token')
-      },
-      body: JSON.stringify({
-        input: this.state.input
-      })
-    })
-      .then(response => response.json())
+    apiCalls.uploadImage({ input: this.state.input, token: window.sessionStorage.getItem('token') })
       .then(response => {
         if (response) {
-          fetch(`http://${process.env.REACT_APP_API_HOST}:3002/image`, {
-            method: 'put',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': window.sessionStorage.getItem('token')
-            },
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
-          })
-            .then(response => response.json())
+          apiCalls.updateEntriesCount({ userId: this.state.user.id, token: window.sessionStorage.getItem('token') })
             .then(count => {
               this.setState(Object.assign(this.state.user, { entries: count }))
             })

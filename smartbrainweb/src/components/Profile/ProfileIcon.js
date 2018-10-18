@@ -1,4 +1,5 @@
 import React from 'react';
+import * as apiCalls from '../../api/apiCalls';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class ProfileIcon extends React.Component {
@@ -18,14 +19,8 @@ class ProfileIcon extends React.Component {
     }
 
     handleSignOut = () => {
-        fetch(`http://${process.env.REACT_APP_API_HOST}:3002/signout`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': window.sessionStorage.getItem('token')
-            }
-        })
-            .then(response => response.json())
+        const token = window.sessionStorage.getItem('token');
+        apiCalls.signOut(token)
             .then(resp => {
                 if (resp === 'OK') {
                     window.sessionStorage.removeItem('token');

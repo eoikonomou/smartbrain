@@ -1,4 +1,5 @@
 import React from 'react';
+import * as apiCalls from '../../api/apiCalls';
 import './Signin.css';
 
 class Signin extends React.Component {
@@ -23,26 +24,11 @@ class Signin extends React.Component {
   }
 
   onSubmitSignIn = () => {
-    fetch(`http://${process.env.REACT_APP_API_HOST}:3002/signin`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword
-      })
-    })
-      .then(response => response.json())
+    apiCalls.signIn({ email: this.state.signInEmail, password: this.state.signInPassword })
       .then(data => {
         if (data.userId && data.success === 'true') {
           this.saveAuthTokenInSession(data.token);
-          fetch(`http://${process.env.REACT_APP_API_HOST}:3002/profile/${data.userId}`, {
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': data.token
-            }
-          })
-            .then(response => response.json())
+          apiCalls.getProfile({ userId: data.userId, token: data.token })
             .then(user => {
               if (user && user.email) {
                 this.props.loadUser(user);
@@ -54,7 +40,7 @@ class Signin extends React.Component {
       })
       .catch(err => console.log(err));
   }
-
+  2105752302
   render() {
     const { onRouteChange } = this.props;
     return (

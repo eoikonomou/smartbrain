@@ -1,4 +1,5 @@
 import React from 'react';
+import * as apiCalls from '../../api/apiCalls';
 import './Register.css'
 
 class Register extends React.Component {
@@ -24,16 +25,7 @@ class Register extends React.Component {
   }
 
   onSubmitSignIn = () => {
-    fetch(`http://${process.env.REACT_APP_API_HOST}:3002/register`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-        name: this.state.name
-      })
-    })
-      .then(response => response.json())
+    apiCalls.registerUser(this.state)
       .then(data => {
         const { user, token } = data;
         if (user.id) {

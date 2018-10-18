@@ -1,4 +1,5 @@
 import React from 'react';
+import * as apiCalls from '../../api/apiCalls';
 import './Profile.css';
 
 class Profile extends React.Component {
@@ -33,19 +34,13 @@ class Profile extends React.Component {
 
     onProfileUpdate = () => {
         let data = { ...this.props.user, ...this.state };
-        fetch(`http://${process.env.REACT_APP_API_HOST}:3002/profile/${this.props.user.id}`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': window.sessionStorage.getItem('token')
-            },
-            body: JSON.stringify({ formInput: data })
-        }).then(response => {
-            if (response.status === 200 || response.status === 304) {
-                this.props.toggleModal();
-                this.props.loadUser(data);
-            }
-        }).catch(err => console.log(err));
+        apiCalls.updateProfile({ userId: this.props.user.id, data, token: window.sessionStorage.getItem('token') })
+            .then(response => {
+                if (response.status === 200 || response.status === 304) {
+                    this.props.toggleModal();
+                    this.props.loadUser(data);
+                }
+            }).catch(err => console.log(err));
     }
 
     render() {
