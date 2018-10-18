@@ -50,3 +50,48 @@ services:
     working_dir: /usr/src/smartbrainweb
     ports:
       - "3001:3001"
+
+  # Enable these to test load balancer.
+  # smartbrainweb1:
+  #   container_name: web1
+  #   environment:
+  #     API_HOST: localhost
+  #   build: ../smartbrainweb/
+  #   command: npm start
+  #   working_dir: /usr/src/smartbrainweb
+  #   ports:
+  #     - 3001
+
+  # smartbrainweb2:
+  #   container_name: web2
+  #   environment:
+  #     API_HOST: localhost
+  #   build: ../smartbrainweb/
+  #   command: npm start
+  #   working_dir: /usr/src/smartbrainweb
+  #   ports:
+  #     - 3001
+
+  # smartbrainweb3:
+  #   container_name: web3
+  #   environment:
+  #     API_HOST: localhost
+  #   build: ../smartbrainweb/
+  #   command: npm start
+  #   working_dir: /usr/src/smartbrainweb
+  #   ports:
+  #     - 3001
+
+  # Load Balancer - Enable this along with the above web services to test load balancer
+  # loadbalancer:
+  #   container_name: loadbalancer
+  #   build: ../loadbalancer/
+  #   ports:
+  #     - 80:80
+  #   links:
+  #     - smartbrainweb1
+  #     - smartbrainweb2
+  #     - smartbrainweb3
+  #   volumes:
+  #     # allows you to run docker commands inside container
+  #     - /var/run/docker.sock:/var/run/docker.sock
