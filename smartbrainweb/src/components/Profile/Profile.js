@@ -33,7 +33,7 @@ class Profile extends React.Component {
 
     onProfileUpdate = () => {
         let data = { ...this.props.user, ...this.state };
-        fetch(`http://localhost:3002/profile/${this.props.user.id}`, {
+        fetch(`http://${process.env.REACT_APP_API_HOST}:3002/profile/${this.props.user.id}`, {
             method: 'post',
             headers: {
                 'Content-Type': 'application/json',

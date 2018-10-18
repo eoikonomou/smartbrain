@@ -52,7 +52,7 @@ class App extends Component {
   componentDidMount() {
     const token = window.sessionStorage.getItem('token');
     if (token) {
-      fetch('http://localhost:3002/signin', {
+      fetch(`http://${process.env.REACT_APP_API_HOST}:3002/signin`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ class App extends Component {
         .then(response => response.json())
         .then(data => {
           if (data && data.id) {
-            fetch(`http://localhost:3002/profile/${data.id}`, {
+            fetch(`http://${process.env.REACT_APP_API_HOST}:3002/profile/${data.id}`, {
               method: 'get',
               headers: {
                 'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    fetch('http://localhost:3002/imageurl', {
+    fetch(`http://${process.env.REACT_APP_API_HOST}:3002/imageurl`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch('http://localhost:3002/image', {
+          fetch(`http://${process.env.REACT_APP_API_HOST}:3002/image`, {
             method: 'put',
             headers: {
               'Content-Type': 'application/json',

@@ -13,9 +13,12 @@
     "tachyons": "^4.9.0"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env-shell REACT_APP_API_HOST=${API_HOST} PORT=3001 react-scripts start",
+    "build": "cross-env-shell REACT_APP_API_HOST=${API_HOST} react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0"
   }
 }
