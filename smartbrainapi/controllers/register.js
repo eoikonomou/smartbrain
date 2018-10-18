@@ -1,3 +1,6 @@
+const jwtUtils = require('../utils/jwtUtils');
+const redisUtils = require('../utils/redisUtils');
+
 const handleRegister = (req, res, db, bcrypt) => {
   const { email, name, password } = req.body;
   if (!email || !name || !password) {
@@ -20,13 +23,18 @@ const handleRegister = (req, res, db, bcrypt) => {
             joined: new Date()
           })
           .then(user => {
-            res.json(user[0]);
-          })
+            // JWT token generation and return user data
+            const { email, id } = user[0];
+            const token = jwtUtils.signToken(email);
+            redisUtils.setToken(token, id)
+              .then(() => { res.json({ user: user[0], token: token }); })
+              .catch(err => console.log(err));
+          });
       })
       .then(trx.commit)
       .catch(trx.rollback)
   })
-    .catch(err => res.status(400).json('unable to register'))
+    .catch(err => { console.log(err); res.status(400).json('unable to register'); })
 }
 
 module.exports = {
