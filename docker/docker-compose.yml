@@ -41,10 +41,12 @@ services:
     #  - ../smartbrainapi:/usr/src/smartbrainapi
 
   # Web
-  # smartbrainweb:
-  #   container_name: web
-  #   build: ../smartbrainweb/
-  #   command: npm start
-  #   working_dir: /usr/src/smartbrainweb
-  #   ports:
-  #     - "3001:3001"
+  smartbrainweb:
+    container_name: web
+    environment:
+      API_HOST: localhost
+    build: ../smartbrainweb/
+    command: npm start
+    working_dir: /usr/src/smartbrainweb
+    ports:
+      - "3001:3001"
