@@ -12,6 +12,7 @@ const signin = require('./controllers/signin');
 const signout = require('./controllers/signout');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
+const rank = require('./controllers/rank');
 const auth = require('./middleware/authorization');
 
 const db = knex({
@@ -36,6 +37,7 @@ app.post('/profile/:id', auth.requireAuth, (req, res) => { profile.handleProfile
 app.put('/image', auth.requireAuth, (req, res) => { image.handleImage(req, res, db); });
 app.post('/imageurl', auth.requireAuth, (req, res) => { image.handleApiCall(req, res); });
 app.post('/signout', auth.requireAuth, (req, res) => { signout.handleSignOut(req, res); });
+app.get('/rank', auth.requireAuth, (req, res) => { rank.rank(req, res); });
 /* ----------------------------- API End ------------------------------------------ */
 
 app.listen(3002, () => {

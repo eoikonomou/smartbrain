@@ -125,6 +125,21 @@ const updateEntriesCount = ({ userId, token }) => {
     });
 }
 
+const getBadge = (entries, token) => {
+    return new Promise((resolve, reject) => {
+        return fetch(`http://${process.env.REACT_APP_API_HOST}:3002/rank?rank=${entries}`, {
+            method: 'get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        })
+            .then(response => response.json())
+            .then(data => resolve(data))
+            .catch(err => reject(err));
+    });
+}
+
 module.exports = {
     signIn,
     signOut,
@@ -132,5 +147,6 @@ module.exports = {
     getProfile,
     updateProfile,
     uploadImage,
-    updateEntriesCount
+    updateEntriesCount,
+    getBadge
 }
