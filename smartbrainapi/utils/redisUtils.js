@@ -6,7 +6,7 @@ const setToken = (token, id) => {
             if (err || !reply) {
                 return reject(err || 'A problem occurred generating the token');
             }
-            return resolve(redisClient.set(token, id));
+            return resolve(reply);
         });
     });
 
